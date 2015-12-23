@@ -30,21 +30,25 @@ function callSearch(text, showCallback, response) {
 }
 
 function showList(results, response) {
-	var lista = "<ul>";
+	var lista = "<table>";
 	for(var i = 0; i < results.items.length; i++) {
 		var videoId = results.items[i].id.videoId;
 		var videoName = results.items[i].snippet.title;
-		lista += "<li>" + videoName + "<a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a><a hred=/des/" + videoId + ">Descargar</a></li>"
+		lista += "<tr><td>" + videoName + "</td><td><a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a></td><td><a href=/des/" + videoId + ">Descargar</a></td></tr>"
 	}
-	lista += "</ul>";
+	lista += "</table>";
 	var out = org_html.replace('##LIST##', lista);
 	response.setHeader('Content-Length', Buffer.byteLength(out));
 	response.setHeader('Content-Type', 'text/html');
 	response.end(out);
 }
 
-function downloadVideo(videoId) {
+function downloadVideo(videoId, response) {
 	exec("youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId);
+	var out = "<script>window.history.back()</script>";
+	response.setHeader('Content-Length', Buffer.byteLength(out));
+	response.setHeader('Content-Type', 'text/html');
+	response.end(out);
 }
 
 
@@ -54,9 +58,10 @@ var server = http.createServer(function (req, res) {
                         var path = url.parse(req.url).pathname;
                         var parts = path.split('/')
                         if (parts[1] == 'des') {
-                        	downloadVideo(parts[1]);
+                        	//console.log("DES " + parts[2]);
+                        	downloadVideo(parts[2], res);
                         } else if(parts[1] == 'busc') {
-                        	callSearch(parts[1], showList, res);
+                        	callSearch(parts[2], showList, res);
                         } else {
                         	var out = org_html.replace('##LIST##', '');
                         	res.setHeader('Content-Length', Buffer.byteLength(out));
@@ -70,4 +75,4 @@ var server = http.createServer(function (req, res) {
         }
 });
 
-server.listen(80, '0.0.0.0');
+server.listen(8080, '0.0.0.0');
