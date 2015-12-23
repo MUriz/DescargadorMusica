@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<title>Descargar Musica</title>
+	</head>
+	<body>
+		<div id="search_div">
+	        <input type="search" id="txt_search" />
+	        <button id="btn_search" onclick="myFunction()">Buscar</button>
+	        <script>
+				function myFunction() {
+					var txt_search = document.getElementById('txt_search');
+					window.location.replace('/' + 'busc/'txt_search.value);
+				}
+			</script>
+        </div>
+        <div id="divVideoList">##LIST##</div>
+	</body>
+</html>
