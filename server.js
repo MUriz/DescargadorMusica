@@ -99,7 +99,7 @@ var server = http.createServer(function (req, res) {
                         var parts = path.split('/')
                         if (parts[1] == 'des') {
                         	//console.log("DES " + parts[2]);
-                        	downloadVideo(parts[2], res);
+                        	downloadVideo(parts[3],parts[2], res);
                         } else if (parts[1] == 'sel') {
                         	showWhereDownload(parts[2], res);
                         } else if(parts[1] == 'busc') {
