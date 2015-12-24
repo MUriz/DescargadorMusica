@@ -120,6 +120,7 @@ function writeListDir(path, response, url) {
 var server = http.createServer(function (req, res) {
         switch (req.method) {
                 case "GET":
+                		console.log(req.url);
                         var path = url.parse(req.url).pathname;
                         var query = url.parse(req.url).query;
                         var parts = path.split('/')
