@@ -56,7 +56,7 @@ function showList(results, response) {
 		lista += "<tr><td>" + videoName + "</td><td><a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a></td><td><a href=/sel/" + videoId + ">Descargar</a></td></tr>"
 	}
 	lista += "</table>";
-	var out = org_html.replace('##LIST##', lista);
+	var out = fs.readFileSync('index.html').replace('##LIST##', lista);
 	writeHtml(out, response);
 }
 
@@ -111,7 +111,8 @@ var server = http.createServer(function (req, res) {
                         } else if(parts[1] == 'mus') {
                         	responseMusic('/mnt/usb/' + parts[2] + '/' + parts[3], res);
                         } else {
-                        	var out = org_html.replace('##LIST##', '');
+                        	var out = fs.readFileSync('index.html');
+                        	out = org.replace('##LIST##', '');
                         	writeHtml(out, res);
                         }
                         break;
