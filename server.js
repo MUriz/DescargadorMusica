@@ -44,26 +44,26 @@ function responseMusic(mp3_file, response) {
 
 function replaceChars(str) {
 	retStr = str;
-	retStr = retStr.replace("á", "a");
-	retStr = retStr.replace("é", "e");
-	retStr = retStr.replace("í", "i");
-	retStr = retStr.replace("ó", "o");
-	retStr = retStr.replace("ú", "u");
-	retStr = retStr.replace("Á", "A");
-	retStr = retStr.replace("É", "E");
-	retStr = retStr.replace("Í", "I");
-	retStr = retStr.replace("Ó", "O");
-	retStr = retStr.replace("Ú", "U");
-	retStr = retStr.replace("ñ", "n");
-	retStr = retStr.replace("Ñ", "N");
-	retStr = retStr.replace('?', '');
-	retStr = retStr.replace('*', '');
-	retStr = retStr.replace('\'', '');
-	retStr = retStr.replace('/', '');
-	retStr = retStr.replace(' ', '+');
-	retStr = retStr.replace('-', '');
-	retStr = retStr.replace('(', '');
-	retStr = retStr.replace(')', '');
+	retStr = retStr.replace(/á/g, "a");
+	retStr = retStr.replace(/é/g, "e");
+	retStr = retStr.replace(/í/g, "i");
+	retStr = retStr.replace(/ó/g, "o");
+	retStr = retStr.replace(/ú/g, "u");
+	retStr = retStr.replace(/Á/g, "A");
+	retStr = retStr.replace(/É/g, "E");
+	retStr = retStr.replace(/Í/g, "I");
+	retStr = retStr.replace(/Ó/g, "O");
+	retStr = retStr.replace(/Ú/g, "U");
+	retStr = retStr.replace(/ñ/g, "n");
+	retStr = retStr.replace(/Ñ/g, "N");
+	retStr = retStr.replace(/\?/g, '');
+	retStr = retStr.replace(/\*/g, '');
+	retStr = retStr.replace(/\\/g, '');
+	retStr = retStr.replace(/\//g, '');
+	retStr = retStr.replace(/ /g, '+');
+	retStr = retStr.replace(/-/g, '');
+	retStr = retStr.replace(/(/g, '');
+	retStr = retStr.replace(/)/g, '');
 	return retStr;
 }
 
