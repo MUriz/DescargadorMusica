@@ -31,7 +31,8 @@ function callSearch(text, showCallback, response) {
 }
 
 function responseMusic(mp3_file, response) {
-    var stat = fs.statSync(mp3_file.replace(/\+/g, ' '));
+	var filePath = mp3_file.replace(/\+/g, ' ');
+    var stat = fs.statSync(filePath);
 
     response.writeHead(200, {
         'Content-Type': 'audio/mpeg',
