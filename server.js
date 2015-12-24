@@ -57,7 +57,7 @@ function showList(results, response) {
 	}
 	lista += "</table>";
 	var out = fs.readFileSync('index.html').replace('##LIST##', lista);
-	writeHtml(out, response);
+	writeHtml(out, response)
 }
 
 function downloadVideo(where, videoId, response) {
@@ -112,7 +112,7 @@ var server = http.createServer(function (req, res) {
                         	responseMusic('/mnt/usb/' + parts[2] + '/' + parts[3], res);
                         } else {
                         	var out = fs.readFileSync('index.html');
-                        	out = org.replace('##LIST##', '');
+                        	out = out.replace('##LIST##', '');
                         	writeHtml(out, res);
                         }
                         break;
