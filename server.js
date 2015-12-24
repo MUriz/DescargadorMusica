@@ -78,8 +78,8 @@ function showList(results, response) {
 	for(var i = 0; i < results.items.length; i++) {
 		var videoId = results.items[i].id.videoId;
 		var videoName = results.items[i].snippet.title;
-		videoName = replaceChars(videoName);
-		lista += "<tr><td>" + videoName + "</td><td><a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a></td><td><a href=/sel/" + videoId + "/?name=" + videoName + ">Descargar</a></td></tr>"
+		var videoNameUri = replaceChars(videoName);
+		lista += "<tr><td>" + videoName + "</td><td><a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a></td><td><a href=/sel/" + videoId + "/?name=" + videoNameUri + ">Descargar</a></td></tr>"
 	}
 	lista += "</table>";
 	var out = fs.readFileSync('index.html').toString().replace('##LIST##', lista);
@@ -88,7 +88,7 @@ function showList(results, response) {
 
 function downloadVideo(where, videoId, videoName, response) {
 	//console.log("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"/mnt/usb/" + where + "%(title)s.%(ext)s\"");
-	exec("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"" + videoName + "\"");
+	exec("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"" + videoName + ".%(ext)s\"");
 	console.log("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"" + videoName + ".%(ext)s\"");
 	//exec("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId);
 	if (lastSearch == "") {
