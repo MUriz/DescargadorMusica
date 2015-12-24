@@ -61,6 +61,9 @@ function replaceChars(str) {
 	retStr = retStr.replace('\'', '');
 	retStr = retStr.replace('/', '');
 	retStr = retStr.replace(' ', '+');
+	retStr = retStr.replace('-', '');
+	retStr = retStr.replace('(', '');
+	retStr = retStr.replace(')', '');
 	return retStr;
 }
 
