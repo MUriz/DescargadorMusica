@@ -42,6 +42,23 @@ function responseMusic(mp3_file, response) {
     readStream.pipe(response);
 }
 
+function replaceChars(str) {
+	retStr = str;
+	retStr = retStr.replace("á", "a");
+	retStr = retStr.replace("é", "e");
+	retStr = retStr.replace("í", "i");
+	retStr = retStr.replace("ó", "o");
+	retStr = retStr.replace("ú", "u");
+	retStr = retStr.replace("Á", "A");
+	retStr = retStr.replace("É", "E");
+	retStr = retStr.replace("Í", "I");
+	retStr = retStr.replace("Ó", "O");
+	retStr = retStr.replace("Ú", "U");
+	retStr = retStr.replace("ñ", "n");
+	retStr = retStr.replace("Ñ", "N");
+	return retStr;
+}
+
 function writeHtml(html, response) {
 	response.setHeader('Content-Length', Buffer.byteLength(html));
 	response.setHeader('Content-Type', 'text/html');
@@ -53,16 +70,17 @@ function showList(results, response) {
 	for(var i = 0; i < results.items.length; i++) {
 		var videoId = results.items[i].id.videoId;
 		var videoName = results.items[i].snippet.title;
-		lista += "<tr><td>" + videoName + "</td><td><a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a></td><td><a href=/sel/" + videoId + ">Descargar</a></td></tr>"
+		videoName = replaceChars(videoName);
+		lista += "<tr><td>" + videoName + "</td><td><a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a></td><td><a href=/sel/" + videoId + "/" + videoName + ">Descargar</a></td></tr>"
 	}
 	lista += "</table>";
 	var out = fs.readFileSync('index.html').toString().replace('##LIST##', lista);
 	writeHtml(out, response)
 }
 
-function downloadVideo(where, videoId, response) {
-	console.log("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"/mnt/usb/" + where + "%(title)s.%(ext)s\"");
-	exec("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"/mnt/usb/" + where + "%(title)s.%(ext)s\"");
+function downloadVideo(where, videoId, videoName, response) {
+	//console.log("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"/mnt/usb/" + where + "%(title)s.%(ext)s\"");
+	exec("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"" + videoName + "\"");
 	//exec("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId);
 	if (lastSearch == "") {
 		writeHtml("<script>window.location=/</script>", response);
@@ -71,12 +89,12 @@ function downloadVideo(where, videoId, response) {
 	}
 }
 
-function showWhereDownload(videoId, response) {
+function showWhereDownload(videoId, videoName, response) {
 	var selectFolderHtml = fs.readFileSync('selectFolder.html').toString();
 	var list_dir = fs.readdirSync('/mnt/usb/');
 	var lst = "";
 	for (var i = 0; i < list_dir.length; i++) {
-		lst += "<li><a href=/des/" + videoId + "/" + list_dir[i] + ">" + list_dir[i] + "</a></li>";
+		lst += "<li><a href=/des/" + videoId + "/" + videoName + "/" + list_dir[i] + ">" + list_dir[i] + "</a></li>";
 	}
 	selectFolderHtml = selectFolderHtml.replace("##LIST##", lst);
 	writeHtml(selectFolderHtml, response);
@@ -101,9 +119,9 @@ var server = http.createServer(function (req, res) {
                         var parts = path.split('/')
                         if (parts[1] == 'des') {
                         	//console.log("DES " + parts[2]);
-                        	downloadVideo(parts[3],parts[2], res);
+                        	downloadVideo(parts[3],parts[2],parts[4],res);
                         } else if (parts[1] == 'sel') {
-                        	showWhereDownload(parts[2], res);
+                        	showWhereDownload(parts[2], parts[3], res);
                         } else if(parts[1] == 'busc') {
                         	callSearch(parts[2], showList, res);
                         } else if(parts[1] == 'carp') {
