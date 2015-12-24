@@ -31,7 +31,7 @@ function callSearch(text, showCallback, response) {
 }
 
 function responseMusic(mp3_file, response) {
-    var stat = fs.statSync(mp3_file);
+    var stat = fs.statSync(mp3_file.replace(/\+/g, ' '));
 
     response.writeHead(200, {
         'Content-Type': 'audio/mpeg',
@@ -114,7 +114,7 @@ function writeListDir(path, response, url) {
 	var list_dir = fs.readdirSync(path);
 	var lst = "";
 	for (var i = 0; i < list_dir.length; i++) {
-		lst += "<li><a href=/" + url + "/?w=" + list_dir[i] + ">" + list_dir[i] + "</a></li>";
+		lst += "<li><a href=/" + url + "/?w=" + list_dir[i].replace(/ /g, '+') + ">" + list_dir[i] + "</a></li>";
 	}
 	selectFolderHtml = selectFolderHtml.replace("##LIST##", lst);
 	writeHtml(selectFolderHtml, response);
