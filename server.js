@@ -116,6 +116,16 @@ function writeListDir(path, response, url) {
 	writeHtml(selectFolderHtml, response);
 }
 
+function htmlUriToJSON(str) {
+	var parts = str.split('&');
+	var a = "{";
+	for (var i = 0; i < parts.length; i++) {
+		var p = parts[i].split('=');
+		a += "\"" + p[0] + "\" : \"" + p[1] + "\","; 
+	}
+	a = a.substr(0, a.length-1) + "}";
+	return JSON.parse(a);
+}
 
 var server = http.createServer(function (req, res) {
         switch (req.method) {
@@ -127,28 +137,28 @@ var server = http.createServer(function (req, res) {
                         if (parts[1] == 'des') {
                         	//URL ==> /des/videoId/?name=videoName&w=folder
                         	var videoId = parts[2]
-                        	var params = JSON.parse("{" + query.replace('=', ':').replace('&', ',') + "}");
+                        	var params = htmlUriToJSON(query);
                         	//console.log("DES " + parts[2]);
                         	downloadVideo(params.w,videoId,params.name,res);
                         } else if (parts[1] == 'sel') {
                         	//URL => /sel/videoId/?name=videoName
                         	var videoId = parts[2]
-                        	var params = JSON.parse("{" + query.replace('=', ':').replace('&', ',') + "}");
+                        	var params = htmlUriToJSON(query);
                         	showWhereDownload(videoId, params.name, res);
                         } else if(parts[1] == 'busc') {
                         	//URL => /busc/?txt=text
-                        	var params = JSON.parse("{" + query.replace('=', ':').replace('&', ',') + "}");
+                        	var params = htmlUriToJSON(query);
                         	callSearch(params.txt, showList, res);
                         } else if(parts[1] == 'carp') {
                         	//URL => /carp/
                         	writeListDir('/mnt/usb/', res, 'list');
                         } else if(parts[1] == 'list') {
                         	//URL => /list/?w=asd
-                        	var params = JSON.parse("{" + query.replace('=', ':').replace('&', ',') + "}");
+                        	var params = htmlUriToJSON(query);
                         	writeListDir('/mnt/usb/' + params.w, res, 'mus/' + params.w);
                         } else if(parts[1] == 'mus') {
                         	//URL => /mus/folder/?w=file
-                        	var params = JSON.parse("{" + query.replace('=', ':').replace('&', ',') + "}");
+                        	var params = htmlUriToJSON(query);
                         	responseMusic('/mnt/usb/' + parts[2] + '/' + params.w, res);
                         } else {
                         	var out = fs.readFileSync('index.html').toString();
