@@ -139,6 +139,7 @@ var server = http.createServer(function (req, res) {
                         	var videoId = parts[2]
                         	var params = htmlUriToJSON(query);
                         	//console.log("DES " + parts[2]);
+                        	console.log(query);
                         	downloadVideo(params.w,videoId,params.name,res);
                         } else if (parts[1] == 'sel') {
                         	//URL => /sel/videoId/?name=videoName
