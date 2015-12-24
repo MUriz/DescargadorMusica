@@ -53,7 +53,7 @@ function showList(results, response) {
 	for(var i = 0; i < results.items.length; i++) {
 		var videoId = results.items[i].id.videoId;
 		var videoName = results.items[i].snippet.title;
-		lista += "<tr><td>" + videoName + "</td><td><a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a></td><td><a href=/sel/" + videoId ">Descargar</a></td></tr>"
+		lista += "<tr><td>" + videoName + "</td><td><a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a></td><td><a href=/sel/" + videoId + ">Descargar</a></td></tr>"
 	}
 	lista += "</table>";
 	var out = org_html.replace('##LIST##', lista);
