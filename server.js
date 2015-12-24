@@ -61,9 +61,9 @@ function replaceChars(str) {
 	retStr = retStr.replace(/\\/g, '');
 	retStr = retStr.replace(/\//g, '');
 	retStr = retStr.replace(/ /g, '+');
-	retStr = retStr.replace(/-/g, '');
-	retStr = retStr.replace(/(/g, '');
-	retStr = retStr.replace(/)/g, '');
+	retStr = retStr.replace(/\-/g, '');
+	retStr = retStr.replace(/\(/g, '');
+	retStr = retStr.replace(/\)/g, '');
 	return retStr;
 }
 
