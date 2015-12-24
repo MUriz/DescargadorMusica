@@ -60,6 +60,7 @@ function replaceChars(str) {
 	retStr = retStr.replace('*', '');
 	retStr = retStr.replace('\'', '');
 	retStr = retStr.replace('/', '');
+	retStr = retStr.replace(' ', '+');
 	return retStr;
 }
 
@@ -75,7 +76,7 @@ function showList(results, response) {
 		var videoId = results.items[i].id.videoId;
 		var videoName = results.items[i].snippet.title;
 		videoName = replaceChars(videoName);
-		lista += "<tr><td>" + videoName + "</td><td><a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a></td><td><a href=/sel/" + videoId + "/?name" + videoName + ">Descargar</a></td></tr>"
+		lista += "<tr><td>" + videoName + "</td><td><a href=https://www.youtube.es/watch?v=" + videoId + ">Ver</a></td><td><a href=/sel/" + videoId + "/?name=" + videoName + ">Descargar</a></td></tr>"
 	}
 	lista += "</table>";
 	var out = fs.readFileSync('index.html').toString().replace('##LIST##', lista);
