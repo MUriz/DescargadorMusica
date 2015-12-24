@@ -61,7 +61,8 @@ function showList(results, response) {
 }
 
 function downloadVideo(where, videoId, response) {
-	exec("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"/mnt/usb/" + where + "%(title)s.%(ext)s\"");
+	//exec("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"/mnt/usb/" + where + "%(title)s.%(ext)s\"");
+	exec("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId);
 	if (lastSearch == "") {
 		writeHtml("<script>window.location=/</script>", response);
 	} else {
