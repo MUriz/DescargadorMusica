@@ -63,7 +63,7 @@ function showList(results, response) {
 function downloadVideo(where, videoId, response) {
 	exec("youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"/mnt/usb/" + where + "%(title)s.%(ext)s\"");
 	if (lastSearch == "") {
-		writeHtml("<script>window.location=/</script>");
+		writeHtml("<script>window.location=/</script>", response);
 	} else {
 		callSearch(lastSearch, showList, response);
 	}
@@ -101,7 +101,7 @@ var server = http.createServer(function (req, res) {
                         	//console.log("DES " + parts[2]);
                         	downloadVideo(parts[2], res);
                         } else if (parts[1] == 'sel') {
-                        	showWhereDownload(parts[3], parts[2], res);
+                        	showWhereDownload(parts[2], res);
                         } else if(parts[1] == 'busc') {
                         	callSearch(parts[2], showList, res);
                         } else if(parts[1] == 'carp') {
