@@ -143,6 +143,7 @@ var server = http.createServer(function (req, res) {
                         	downloadVideo(params.w,videoId,params.name,res);
                         } else if (parts[1] == 'sel') {
                         	//URL => /sel/videoId/?name=videoName
+                        	console.log(query);
                         	var videoId = parts[2]
                         	var params = htmlUriToJSON(query);
                         	showWhereDownload(videoId, params.name, res);
@@ -161,7 +162,7 @@ var server = http.createServer(function (req, res) {
                         	//URL => /mus/folder/?w=file
                         	var params = htmlUriToJSON(query);
                         	responseMusic('/mnt/usb/' + parts[2] + '/' + params.w, res);
-                        } else {
+                        } else if (path == '/') {
                         	var out = fs.readFileSync('index.html').toString();
                         	out = out.replace('##LIST##', '');
                         	writeHtml(out, res);
