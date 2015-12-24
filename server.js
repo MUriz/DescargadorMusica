@@ -57,6 +57,7 @@ function replaceChars(str) {
 	retStr = retStr.replace(/Ú/g, "U");
 	retStr = retStr.replace(/ñ/g, "n");
 	retStr = retStr.replace(/Ñ/g, "N");
+	retStr = retStr.replace(/&/g, 'y')
 	retStr = retStr.replace(/\?/g, '');
 	retStr = retStr.replace(/\*/g, '');
 	retStr = retStr.replace(/\\/g, '');
