@@ -1,5 +1,6 @@
 <html>
 	<head>
+		 <meta charset="ISO-8859-1"> 
 		<title>Descargar Musica</title>
 		<script>
 			window.onload = function() {
@@ -8,7 +9,7 @@
 				btn_search.onclick = function() {
 					console.log("CLICK");
 					var txt_search = document.getElementById('txt_search');
-					window.location.href = '/' + 'busc/?txt=' + txt_search.value;
+					window.location.href = '/' + 'busc/?txt=' + txt_search.value.replace(/ /g, '+');
 				}
 			}
 		</script>
@@ -17,7 +18,7 @@
 		<div id="search_div">
 	        <input type="search" id="txt_search" />
 	        <button id="btn_search">Buscar</button>
-	        <a href='/carp'>Ver descargas</a>
+	        <a href='/usb'>Ver descargas</a>
         </div>
         <div id="divVideoList">##LIST##</div>
 	</body>

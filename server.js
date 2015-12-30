@@ -88,10 +88,15 @@ function showList(results, response) {
 	writeHtml(out, response)
 }
 
-function downloadVideo(where, videoId, videoName, response) {
+function downloadVideo(where, videoId, videoName, usb, response) {
+	var w_d = "/mnt/usb";
+	if (usb == "2") {
+		w_d += "2";
+	}
+	w_d += "/";
 	//console.log("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"/mnt/usb/" + where + "%(title)s.%(ext)s\"");
-	exec("youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"/mnt/usb/" + where + "/" + videoName.replace(/\+/g,' ') + ".%(ext)s\"");
-	console.log("youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"/mnt/usb/" + where + "/" + videoName.replace(/\+/g, ' ') + ".%(ext)s\"");
+	exec("youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"" + w_d + where + "/" + videoName.replace(/\+/g,' ') + ".%(ext)s\"");
+	console.log("youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId + " -o \"" + w_d  + where + "/" + videoName.replace(/\+/g, ' ') + ".%(ext)s\"");
 	//exec("sudo youtube-dl --extract-audio --audio-format mp3 https://www.youtube.es/watch?v=" + videoId);
 	if (lastSearch == "") {
 		writeHtml("<script>window.location=/</script>", response);
@@ -105,9 +110,14 @@ function showWhereDownload(videoId, videoName, response) {
 	var list_dir = fs.readdirSync('/mnt/usb/');
 	var lst = "";
 	for (var i = 0; i < list_dir.length; i++) {
-		lst += "<li><a href=/des/" + videoId + "/?name=" + videoName + "&w=" + list_dir[i] + ">" + list_dir[i] + "</a></li>";
+		lst += "<li><a href=/des/" + videoId + "/?name=" + videoName + "&u=1&w=" + list_dir[i] + ">" + list_dir[i] + "</a></li>";
 	}
-	selectFolderHtml = selectFolderHtml.replace("##LIST##", lst);
+	var list_dir2 = fs.readdirSync('/mnt/usb2/');
+	var lst2 = "";
+	for (var i = 0; i < list_dir2.length; i++) {
+		lst2 += "<li><a href=/des/" + videoId + "/?name=" + videoName + "&u=2&w=" + list_dir2[i] + ">" + list_dir2[i] + "</a></li>";
+	}
+	selectFolderHtml = selectFolderHtml.replace("##LIST##", lst).replace("##LIST2##", lst2);
 	writeHtml(selectFolderHtml, response);
 }
 
@@ -116,9 +126,9 @@ function writeListDir(path, response, url) {
 	var list_dir = fs.readdirSync(path);
 	var lst = "";
 	for (var i = 0; i < list_dir.length; i++) {
-		lst += "<li><a href=/" + url + "/?w=" + list_dir[i].replace(/ /g, '+') + ">" + list_dir[i] + "</a></li>";
+		lst += "<li><a href=/" + url + "/?w=" + path + list_dir[i].replace(/ /g, '+') + ">" + list_dir[i] + "</a></li>";
 	}
-	selectFolderHtml = selectFolderHtml.replace("##LIST##", lst);
+	selectFolderHtml = selectFolderHtml.replace("##LIST##", lst).replace('##LIST2##', '');
 	writeHtml(selectFolderHtml, response);
 }
 
@@ -141,12 +151,12 @@ var server = http.createServer(function (req, res) {
                         var query = url.parse(req.url).query;
                         var parts = path.split('/')
                         if (parts[1] == 'des') {
-                        	//URL ==> /des/videoId/?name=videoName&w=folder
+                        	//URL ==> /des/videoId/?name=videoName&w=folder&u=[1|2]
                         	var videoId = parts[2]
                         	var params = htmlUriToJSON(query);
                         	//console.log("DES " + parts[2]);
                         	console.log(query);
-                        	downloadVideo(params.w,videoId,params.name,res);
+                        	downloadVideo(params.w,videoId,params.name,params.u,res);
                         } else if (parts[1] == 'sel') {
                         	//URL => /sel/videoId/?name=videoName
                         	console.log(query);
@@ -157,17 +167,21 @@ var server = http.createServer(function (req, res) {
                         	//URL => /busc/?txt=text
                         	var params = htmlUriToJSON(query);
                         	callSearch(params.txt, showList, res);
+                        } else if(parts[1] == 'usb') {
+                        	//URL => /usb/
+                        	writeListDir('/mnt/', res, 'carp');
                         } else if(parts[1] == 'carp') {
-                        	//URL => /carp/
-                        	writeListDir('/mnt/usb/', res, 'list');
+                        	//URL => /carp/?w=asd
+                        	var params = htmlUriToJSON(query);
+                        	writeListDir(params.w + '/', res, 'list');
                         } else if(parts[1] == 'list') {
                         	//URL => /list/?w=asd
                         	var params = htmlUriToJSON(query);
-                        	writeListDir('/mnt/usb/' + params.w, res, 'mus/' + params.w);
+                        	writeListDir(params.w + '/', res, 'mus/');
                         } else if(parts[1] == 'mus') {
-                        	//URL => /mus/folder/?w=file
+                        	//URL => /mus/?w=file
                         	var params = htmlUriToJSON(query);
-                        	responseMusic('/mnt/usb/' + parts[2] + '/' + params.w, res);
+                        	responseMusic(params.w, res);
                         } else if (path == '/') {
                         	var out = fs.readFileSync('index.html').toString();
                         	out = out.replace('##LIST##', '');
